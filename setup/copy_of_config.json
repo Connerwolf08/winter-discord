@@ -1,0 +1,32 @@
+{
+    "main" : {
+        "token": "",
+        "prefix": "",
+        "owner-id": ,
+        "guild-id": ,
+        "version": "v.1.0"
+    },
+    "api" : {
+        "client_id": "",
+        "client_secret": "",
+        "username": "",
+        "password": "",
+        "user_agent": "",
+        "tenor_key": ""
+    },
+    "db" : {
+        "host": "",
+        "username": "",
+        "password": "",
+        "db_name": ""
+    },
+    "wavelink": {
+        "host": "",
+        "port": 1234,
+        "password": "",
+        "https": ""
+    },
+    "test" : {
+        "token": "" 
+    }
+}
