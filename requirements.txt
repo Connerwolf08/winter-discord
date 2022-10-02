@@ -1,0 +1,6 @@
+discord
+wavelink
+pynacl
+pymysql
+asyncpraw
+wikipedia
