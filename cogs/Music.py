@@ -93,20 +93,20 @@ class Music(commands.Cog):
 
         try:
             embed = nextcord.Embed(
-                title="Music Player",
-                description= "No song is being played in the player.",
-                colour=nextcord.Colour.orange()
-            )
-            embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
-            await interaction.followup.send(embed=embed)
-        except Exception as e:
-            embed = nextcord.Embed(
                 title="Music Player - Skipped",
                 description= vc.track,
                 colour=nextcord.Colour.red()
             )
             embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
             await vc.stop()
+            await interaction.followup.send(embed=embed)
+        except Exception as e :
+            embed = nextcord.Embed(
+                title="Music Player",
+                description= "No song is being played in the player.",
+                colour=nextcord.Colour.orange()
+            )
+            embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
             await interaction.followup.send(embed=embed)
             print(e)
 
