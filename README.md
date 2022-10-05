@@ -20,8 +20,8 @@ update commands.
 ## Bot Info
 
 - Tag : `Winter#5316`
-- Version : `v.1.2`
-- Library : `discord.py`
+- Changes : `Major change from discord.py to nextcord.py`
+- Library : `nextcord.py`
 - Created : `7th June, 2019`
 
 ## Features

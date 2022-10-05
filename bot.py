@@ -1,31 +1,31 @@
 import asyncio
-import wavelink
+import nextwave
 import os
 import json
-import discord
-from discord.ext import commands, tasks
+import nextcord
+from nextcord.ext import commands, tasks
 from setup.funcs import db_write
 
 with open("./setup/config.json") as file_path:
     config = json.load(file_path)
 
-intents = discord.Intents.all()
+intents = nextcord.Intents.all()
 client = commands.Bot(command_prefix=config["main"]["prefix"], intents=intents, application_id="1001495565319815228", help_command=None)
 
-# Wavelink node creation
+# nextwave node creation
 
 async def connect_nodes():
     await client.wait_until_ready()
-    await wavelink.NodePool.create_node(bot=client,
-                                        host=config["wavelink"]["host"],
-                                        port=config["wavelink"]["port"],
-                                        password=config["wavelink"]["password"],
-                                        https=config["wavelink"]["https"])
+    await nextwave.NodePool.create_node(bot=client,
+                                        host=config["nextwave"]["host"],
+                                        port=config["nextwave"]["port"],
+                                        password=config["nextwave"]["password"],
+                                        https=config["nextwave"]["https"])
 
-# Wavelink ON_READY event for the node
+# nextwave ON_READY event for the node
 
 @client.event
-async def on_wavelink_node_ready(node: wavelink.Node):
+async def on_nextwave_node_ready(node: nextwave.Node):
     print(f'Node: {node.identifier}')
 
 # ON_READY event for the bot
@@ -55,30 +55,30 @@ def member_count():
     return obj
 
 def activity(content, type):
-    watching = discord.ActivityType.watching
-    playing = discord.ActivityType.playing
-    listening = discord.ActivityType.listening
-    streaming = discord.ActivityType.streaming
-    competing = discord.ActivityType.competing
+    watching = nextcord.ActivityType.watching
+    playing = nextcord.ActivityType.playing
+    listening = nextcord.ActivityType.listening
+    streaming = nextcord.ActivityType.streaming
+    competing = nextcord.ActivityType.competing
     
     if type == "w":
-        obj = discord.Activity(name=content,type=watching)
+        obj = nextcord.Activity(name=content,type=watching)
         return obj        
 
     if type == "p":
-        obj = discord.Activity(name=content,type=playing)
+        obj = nextcord.Activity(name=content,type=playing)
         return obj
     
     if type == "l":
-        obj = discord.Activity(name=content,type=listening)
+        obj = nextcord.Activity(name=content,type=listening)
         return obj
 
     if type == "s":
-        obj = discord.Activity(name=content,type=streaming)
+        obj = nextcord.Activity(name=content,type=streaming)
         return obj
 
     if type == "c":
-        obj = discord.Activity(name=content,type=competing)
+        obj = nextcord.Activity(name=content,type=competing)
         return obj
 
 async def invite(id):
@@ -100,10 +100,17 @@ def write_guilds():
 @commands.is_owner()
 async def sync(ctx):
     try:
-        fmt = await client.tree.sync(guild=ctx.guild)
-        await ctx.send(f"Synced: {len(fmt)} Commands")
-    except Exception:
-        await ctx.send("Sync Error")
+        fmt = 0
+        for guild in client.guilds:
+            try:
+                fmt = fmt + 1
+                await client.tree.sync(guild=guild)
+            except Exception:
+                pass
+        client.tree.copy_global_to(guild=guild)
+        await ctx.send(f"Synced: {fmt} Guilds with commands.")
+    except Exception as e:
+        await ctx.send(f"Sync Error: {e}")
 
 @client.command()
 @commands.is_owner()
@@ -143,10 +150,9 @@ async def load():
 async def main(development_mode: bool = False):
     async with client:
         await load()
-        client.tree.copy_global_to(guild=discord.Object(id=config["main"]["guild-id"]))
         if development_mode:
             await client.start(config["test"]["token"])
         else:
             await client.start(config["main"]["token"])
 
-asyncio.run(main(True))
+asyncio.run(main())
