@@ -41,15 +41,7 @@ class Music(commands.Cog):
         vc:nextwave.Player = interaction.guild.voice_client
         await interaction.response.defer()
 
-        if vc.is_paused():
-            embed = nextcord.Embed(
-                title="Music Player",
-                description= "A song is already paused in the player.",
-                colour=nextcord.Colour.orange()
-            )
-            embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
-            await interaction.followup.send(embed=embed)
-        else:
+        try:
             await vc.pause()
             embed = nextcord.Embed(
                 title="Music Player - Paused",
@@ -58,22 +50,23 @@ class Music(commands.Cog):
             )
             embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
             await interaction.followup.send(embed=embed)    
+        except Exception as e:
+            embed = nextcord.Embed(
+                title="Music Player",
+                description= "A song is already paused in the player.",
+                colour=nextcord.Colour.orange()
+            )
+            embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
+            await interaction.followup.send(embed=embed)
+            print(e)
 
     @slash_command(name="resume", description="Used to resume a song after you done talking or something.")
     async def resume(self, interaction: Interaction):
         node = nextwave.NodePool.get_node().identifier
         vc:nextwave.Player = interaction.guild.voice_client
         await interaction.response.defer()
-
-        if vc.is_playing():
-            embed = nextcord.Embed(
-                title="Music Player",
-                description= "A song is already playing in the player.",
-                colour=nextcord.Colour.orange()
-            )
-            embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
-            await interaction.followup.send(embed=embed)
-        else:
+            
+        try:
             await vc.resume()
             embed = nextcord.Embed(
                 title="Music Player - Resumed",
@@ -82,6 +75,15 @@ class Music(commands.Cog):
             )
             embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
             await interaction.followup.send(embed=embed)
+        except Exception as e:
+            embed = nextcord.Embed(
+                title="Music Player",
+                description= "A song is already playing in the player.",
+                colour=nextcord.Colour.orange()
+            )
+            embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
+            await interaction.followup.send(embed=embed)
+            print(e)
 
     @slash_command(name="skip", description="Used to skip the current song [Queue may not work]")
     async def skip(self, interaction: Interaction):
@@ -89,7 +91,15 @@ class Music(commands.Cog):
         vc:nextwave.Player = interaction.guild.voice_client
         await interaction.response.defer()
 
-        if vc.is_playing():
+        try:
+            embed = nextcord.Embed(
+                title="Music Player",
+                description= "No song is being played in the player.",
+                colour=nextcord.Colour.orange()
+            )
+            embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
+            await interaction.followup.send(embed=embed)
+        except Exception as e:
             embed = nextcord.Embed(
                 title="Music Player - Skipped",
                 description= vc.track,
@@ -98,14 +108,7 @@ class Music(commands.Cog):
             embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
             await vc.stop()
             await interaction.followup.send(embed=embed)
-        else:
-            embed = nextcord.Embed(
-                title="Music Player",
-                description= "No song is being played in the player.",
-                colour=nextcord.Colour.orange()
-            )
-            embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
-            await interaction.followup.send(embed=embed)
+            print(e)
 
 def setup(client):
     client.add_cog(Music(client))
