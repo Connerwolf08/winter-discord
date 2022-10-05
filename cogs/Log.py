@@ -63,5 +63,5 @@ class Log(commands.Cog):
             )
             await interaction.response.send_message(embed=embed)
 
-async def setup(client):
-    await client.add_cog(Log(client))
+def setup(client):
+    client.add_cog(Log(client))

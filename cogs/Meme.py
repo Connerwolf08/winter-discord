@@ -24,5 +24,5 @@ class Meme(commands.Cog):
         embed.timestamp = datetime.datetime.utcnow()
         await interaction.response.send_message(embed=embed)
 
-async def setup(client):
-    await client.add_cog(Meme(client))
+def setup(client):
+    client.add_cog(Meme(client))

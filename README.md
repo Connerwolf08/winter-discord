@@ -8,8 +8,6 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
 [![Support Server](https://img.shields.io/discord/937755377901133896.svg?color=7289da&label=Winterfell&logo=discord&style=flat-square)](https://discord.com/api/guilds/937755377901133896/widget.json)
-![release](https://badgen.net/github/release/Connerwolf08/winter-discord)
-![tag](https://badgen.net/github/tags/Connerwolf08/winter-discord)
 
 A discord bot made to learn python and implent what i have learned within the bot. Winter Bot development started in 2019 and was closed as i had no idea what to do. Now i am restarting the project and reworking everthing while making the project open source. 
 

@@ -35,7 +35,7 @@ class Music(commands.Cog):
         embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
         await interaction.followup.send(embed=embed)
 
-    @slash_command.command(name="pause", description="Used to pause a song while you talk or something else.")
+    @slash_command(name="pause", description="Used to pause a song while you talk or something else.")
     async def pause(self, interaction: Interaction):
         node = nextwave.NodePool.get_node().identifier
         vc:nextwave.Player = interaction.guild.voice_client
@@ -59,7 +59,7 @@ class Music(commands.Cog):
             embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
             await interaction.followup.send(embed=embed)    
 
-    @slash_command.command(name="resume", description="Used to resume a song after you done talking or something.")
+    @slash_command(name="resume", description="Used to resume a song after you done talking or something.")
     async def resume(self, interaction: Interaction):
         node = nextwave.NodePool.get_node().identifier
         vc:nextwave.Player = interaction.guild.voice_client
@@ -107,6 +107,6 @@ class Music(commands.Cog):
             embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
             await interaction.followup.send(embed=embed)
 
-async def setup(client):
-    await client.add_cog(Music(client))
+def setup(client):
+    client.add_cog(Music(client))
     

@@ -10,17 +10,17 @@ with open("./setup/config.json") as file_path:
     config = json.load(file_path)
 
 intents = nextcord.Intents.all()
-client = commands.Bot(command_prefix=config["main"]["prefix"], intents=intents, application_id="1001495565319815228", help_command=None)
+client = commands.Bot(intents=intents, help_command=None)
 
 # nextwave node creation
 
 async def connect_nodes():
     await client.wait_until_ready()
     await nextwave.NodePool.create_node(bot=client,
-                                        host=config["nextwave"]["host"],
-                                        port=config["nextwave"]["port"],
-                                        password=config["nextwave"]["password"],
-                                        https=config["nextwave"]["https"])
+                                        host=config["wavelink"]["host"],
+                                        port=config["wavelink"]["port"],
+                                        password=config["wavelink"]["password"],
+                                        https=config["wavelink"]["https"])
 
 # nextwave ON_READY event for the node
 
@@ -137,22 +137,21 @@ async def presence_manager():
 
 # Extension Loader
 
-async def load():
+def load():
     counter = 0
     for extension in os.listdir("./cogs"):
         if extension.endswith(".py"):
-            await client.load_extension(f"cogs.{extension[:-3]}")
+            client.load_extension(f"cogs.{extension[:-3]}")
             counter = counter + 1
             print(f"[{counter}] {extension[:-3]}")
 
 # Main Function
 
-async def main(development_mode: bool = False):
-    async with client:
-        await load()
-        if development_mode:
-            await client.start(config["test"]["token"])
-        else:
-            await client.start(config["main"]["token"])
+def main(development_mode: bool = False):
+    load()
+    if development_mode:
+        client.run(config["test"]["token"])
+    else:
+        client.run(config["main"]["token"])
 
-asyncio.run(main())
+main()
