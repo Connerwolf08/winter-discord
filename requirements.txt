@@ -1,5 +1,5 @@
-discord
-wavelink
+nextcord
+nextwave
 pynacl
 pymysql
 asyncpraw
