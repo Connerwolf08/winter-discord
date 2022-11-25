@@ -1,5 +1,4 @@
 import json
-from unicodedata import name
 import nextwave
 import nextcord
 from nextcord import slash_command, SlashOption, Interaction
@@ -19,7 +18,11 @@ class Music(commands.Cog):
         try:
             vc = await interaction.user.voice.channel.connect(cls=nextwave.Player)
         except Exception:
-            vc: nextwave.Player = interaction.guild.voice_client
+            try:
+                await interaction.guild.voice_client.disconnect()
+                vc = await interaction.user.voice.channel.connect(cls=nextwave.Player)
+            except Exception:
+                vc: nextwave.Player = interaction.guild.voice_client
 
         node = nextwave.NodePool.get_node().identifier
         get_track = await nextwave.YouTubeTrack.search(track, return_first=True)
@@ -104,6 +107,31 @@ class Music(commands.Cog):
             embed = nextcord.Embed(
                 title="Music Player",
                 description= "No song is being played in the player.",
+                colour=nextcord.Colour.orange()
+            )
+            embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
+            await interaction.followup.send(embed=embed)
+            print(e)
+
+    @slash_command(name="leave", description="Leaves the channel.")
+    async def leave(self, interaction: Interaction):
+        node = nextwave.NodePool.get_node().identifier
+        vc:nextwave.Player = interaction.guild.voice_client
+        await interaction.response.defer()
+
+        try:
+            embed = nextcord.Embed(
+                title="Music Player - Left",
+                description= "Bai Bai",
+                colour=nextcord.Colour.red()
+            )
+            embed.set_footer(text=f"Connected to Node: {node}", icon_url=ico)
+            await vc.disconnect()
+            await interaction.followup.send(embed=embed)
+        except Exception as e :
+            embed = nextcord.Embed(
+                title="Music Player",
+                description= "Not in a voice channel.",
                 colour=nextcord.Colour.orange()
             )
             embed.set_footer(text=f"Connected to Node: N/A", icon_url=ico)
